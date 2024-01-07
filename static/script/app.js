@@ -110,13 +110,13 @@ const cartRepository = new CartRepository();
 const productTemplate = `
 <li class="product" data-id="{{ID}}" data-in-cart="{{IN_CART}}">
     <img src="{{IMG}}">
-    <div>
+    <div class="product-info">
         <h2 class="title">{{TITLE}}</h2>
-        <div>
+        <div class="price-info">
             <h3 class="price">{{PRICE}}</h3>
             <h4 class="old-price">{{OLD_PRICE}}</h4>
         </div>
-        <div>
+        <div class="product-actions">
             <button class="add-product add-product-main">ДОБАВИТЬ В КОРЗИНУ</button>
             
             <div class="add-product-counter">
@@ -289,8 +289,8 @@ function render() {
             .replace("{{ID}}", product.id)
             .replace("{{IMG}}", product.thumbnailUrl)
             .replace("{{TITLE}}", product.name)
-            .replace("{{PRICE}}", price)
-            .replace("{{OLD_PRICE}}", product.discount ? product.price : "")
+            .replace("{{PRICE}}", price + " р.")
+            .replace("{{OLD_PRICE}}", product.discount ? product.price + " р." : "")
             .replace("{{COUNT}}", cartEntry?.amount ?? 0)
             .replace("{{IN_CART}}", cartEntry ? "true" : "false");
 
@@ -313,8 +313,8 @@ function render() {
             .replace("{{ID}}", product.id)
             .replace("{{IMG}}", product.thumbnailUrl)
             .replace("{{TITLE}}", product.name)
-            .replace("{{PRICE}}", price)
-            .replace("{{OLD_PRICE}}", product.discount ? product.price : "")
+            .replace("{{PRICE}}", price + " р.")
+            .replace("{{OLD_PRICE}}", product.discount ? product.price + " р." : "")
             .replace("{{COUNT}}", cartEntry.amount)
             .replace("{{IN_CART}}", "true");
 

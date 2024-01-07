@@ -10,6 +10,176 @@
     src: url("./../fonts/Roboto-Regular.ttf");
 }
 
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+button, input[type="submit"] {
+    border: none;
+    border-radius: 3px;
+    padding: 3px 10px;
+    background-color: #FDD835;
+    font: inherit;
+    outline: none;
+    cursor: pointer;
+    height: 2rem;
+}
+
+input[type="text"], input[type="number"] {
+    border: 3px solid #FDD835;
+    border-radius: 10px;
+    padding: 3px 5px;
+    outline: none;
+    font: inherit;
+}
+
+button:has(> img) {
+    padding: 5px;
+}
+
+button > img {
+    height: 100%;
+}
+
+main {
+    padding: 1rem;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#search {
+    display: flex;
+    gap: 10px;
+}
+
+#search > input[name="search"] {
+    flex-grow: 1;
+}
+
+#filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    background-color: #FDD835;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+#actions {
+    display: flex;
+    gap: 1rem;
+}
+
+#actions > * {
+    flex-grow: 1;
+}
+
+#products {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.product {
+    word-break: break-word;
+}
+
+.product > img {
+    margin-bottom: 10px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+dialog[open] {
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#cart-close {
+    align-self: end;
+}
+
+#cart-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+#products-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.price-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #424242;
+}
+
+.product-actions > * {
+    width: 100%;
+}
+
+.add-product-counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.counter {
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+h4 {
+    font-size: 14px;
+}
+
+.product > img {
+    width: 100%;
+}
+
 body {
     font-family: Roboto, serif;
 }

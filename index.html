@@ -11,11 +11,13 @@
 <body>
 <main>
     <form>
-        <div>
+        <div id="search">
             <input type="text" name="search">
-            <button type="button" id="cart">Корзина</button>
+            <button type="button" id="cart">
+                <img src="./static/images/shopping-cart.png">
+            </button>
             <dialog>
-                <button type="button" id="cart-close" autofocus>Закрыть</button>
+                <button type="button" id="cart-close" autofocus>X</button>
                 <div id="cart-wrapper">
                     <span>Корзина пустая</span>
                     <div id="products-wrapper"></div>
@@ -25,19 +27,19 @@
 
         <div id="filter-menu">
             <div>
-                <h3>Цена</h3>
+                <h3>Цена (руб.)</h3>
                 <div>
                     <span>От </span><input type="number" name="min-price" required><span> до </span><input type="number" name="max-price" required>
                 </div>
             </div>
             <div>
-                <h3>Оперативная память</h3>
+                <h3>Оперативная память (гб.)</h3>
                 <div>
                     <span>От </span><input type="number" name="min-ram" required><span> до </span><input type="number" name="max-ram" required>
                 </div>
             </div>
             <div>
-                <h3>Встроенная память</h3>
+                <h3>Встроенная память (гб.)</h3>
                 <div>
                     <span>От </span><input type="number" name="min-storage" required><span> до </span><input type="number" name="max-storage" required>
                 </div>
@@ -47,12 +49,12 @@
                 <ul id="manufacturers"></ul>
             </div>
             <div>
-                <h3>Только со скидками</h3>
+                <span>Только со скидками</span>
                 <input type="checkbox" name="discounts">
             </div>
         </div>
 
-        <div>
+        <div id="actions">
             <input type="submit" value="Применить">
             <button type="button" id="clear-filters">Сбросить</button>
         </div>
