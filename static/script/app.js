@@ -203,27 +203,28 @@ function seed() {
 const query = new URLSearchParams(location.search);
 const search = query.get("search") ?? "";
 const priceSort = query.get("price-sort") ?? "descending";
+const allProducts = productRepository.getAll();
 const minPrice = isNaN(parseInt(query.get("min-price")))
-    ? Math.min(...productRepository.getAll().map(p => p.price))
+    ? Math.min(...allProducts.map(p => p.price))
     : parseInt(query.get("min-price"));
 const maxPrice = isNaN(parseInt(query.get("max-price")))
-    ? Math.max(...productRepository.getAll().map(p => p.price))
+    ? Math.max(...allProducts.map(p => p.price))
     : parseInt(query.get("max-price"));
 const minRam = isNaN(parseInt(query.get("min-ram")))
-    ? Math.min(...productRepository.getAll().map(p => p.ram))
+    ? Math.min(...allProducts.map(p => p.ram))
     : parseInt(query.get("min-ram"));
 const maxRam = isNaN(parseInt(query.get("max-ram")))
-    ? Math.max(...productRepository.getAll().map(p => p.ram))
+    ? Math.max(...allProducts.map(p => p.ram))
     : parseInt(query.get("max-ram"));
 const minStorage = isNaN(parseInt(query.get("min-storage")))
-    ? Math.min(...productRepository.getAll().map(p => p.storage))
+    ? Math.min(...allProducts.map(p => p.storage))
     : parseInt(query.get("min-storage"));
 const maxStorage = isNaN(parseInt(query.get("max-storage")))
-    ? Math.max(...productRepository.getAll().map(p => p.storage))
+    ? Math.max(...allProducts.map(p => p.storage))
     : parseInt(query.get("max-storage"));
 const manufacturers = query.getAll("manufacturer").length
     ? query.getAll("manufacturer")
-    : Array.from(new Set(productRepository.getAll().map(p => p.manufacturer)));
+    : Array.from(new Set(allProducts.map(p => p.manufacturer)));
 const discounts = query.has("discounts");
 
 function beforeRender() {
