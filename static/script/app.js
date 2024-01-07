@@ -119,7 +119,16 @@ const productTemplate = `
         </div>
     </div>
 </li>
-`
+`;
+
+const manufacturerTemplate = `
+    <li>
+        <label>
+            {{MANUFACTURER}}
+            <input type="checkbox" name="manufacturer" value="{{MANUFACTURER}}">
+        </label>
+    </li>
+`;
 
 function seed() {
     /** @type Product */
@@ -176,11 +185,73 @@ function seed() {
     productRepository.add(fourth);
 }
 
+const query = new URLSearchParams(location.search);
+const search = query.get("search") ?? "";
+const minPrice = isNaN(parseInt(query.get("min-price")))
+    ? Math.min(...productRepository.getAll().map(p => p.price))
+    : parseInt(query.get("min-price"));
+const maxPrice = isNaN(parseInt(query.get("max-price")))
+    ? Math.max(...productRepository.getAll().map(p => p.price))
+    : parseInt(query.get("max-price"));
+const minRam = isNaN(parseInt(query.get("min-ram")))
+    ? Math.min(...productRepository.getAll().map(p => p.ram))
+    : parseInt(query.get("min-ram"));
+const maxRam = isNaN(parseInt(query.get("max-ram")))
+    ? Math.max(...productRepository.getAll().map(p => p.ram))
+    : parseInt(query.get("max-ram"));
+const minStorage = isNaN(parseInt(query.get("min-storage")))
+    ? Math.min(...productRepository.getAll().map(p => p.storage))
+    : parseInt(query.get("min-storage"));
+const maxStorage = isNaN(parseInt(query.get("max-storage")))
+    ? Math.max(...productRepository.getAll().map(p => p.storage))
+    : parseInt(query.get("max-storage"));
+const manufacturers = query.getAll("manufacturer").length
+    ? query.getAll("manufacturer")
+    : Array.from(new Set(productRepository.getAll().map(p => p.manufacturer)));
+const discounts = query.has("discounts");
+
+function beforeRender() {
+    const rawManufacturers = document.getElementById("manufacturers");
+    rawManufacturers.innerHTML = "";
+
+    const allManufacturers = new Set(productRepository.getAll().map(p => p.manufacturer));
+
+    for (const manufacturer of allManufacturers) {
+        const rawManufacturer = manufacturerTemplate
+            .replaceAll("{{MANUFACTURER}}", manufacturer);
+        rawManufacturers.innerHTML += rawManufacturer;
+    }
+
+    for (const manufacturer of allManufacturers) {
+        if (manufacturers.includes(manufacturer)) {
+            rawManufacturers.querySelector(`input[name="manufacturer"][value="${manufacturer}"]`).checked = true;
+        }
+    }
+
+    document.querySelector(`input[name="search"]`).value = search;
+    document.querySelector(`input[name="min-price"]`).value = minPrice;
+    document.querySelector(`input[name="max-price"]`).value = maxPrice;
+    document.querySelector(`input[name="min-ram"]`).value = minRam;
+    document.querySelector(`input[name="max-ram"]`).value = maxRam;
+    document.querySelector(`input[name="min-storage"]`).value = minStorage;
+    document.querySelector(`input[name="max-storage"]`).value = maxStorage;
+    document.querySelector(`input[name="discounts"]`).checked = discounts;
+}
+
 function render() {
     const rawProducts = document.getElementById("products");
     rawProducts.innerHTML = "";
 
-    const allProducts = productRepository.getAll();
+    let allProducts = productRepository.getAll().filter(p =>
+        p.name.toLowerCase().includes(search.toLowerCase()) &&
+        p.price >= minPrice && p.price <= maxPrice &&
+        p.ram >= minRam && p.ram <= maxRam &&
+        p.storage >= minStorage && p.storage <= maxStorage &&
+        manufacturers.includes(p.manufacturer)
+    );
+    if (discounts) {
+        allProducts = allProducts.filter(p => p.discount);
+    }
 
     for (const product of allProducts) {
         const price = product.discount
@@ -219,4 +290,5 @@ function render() {
 }
 
 seed();
+beforeRender();
 render();

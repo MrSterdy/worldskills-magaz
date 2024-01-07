@@ -10,6 +10,42 @@
 </head>
 <body>
 <main>
+    <form>
+        <input type="text" name="search">
+
+        <div>
+            <div>
+                <h3>Цена</h3>
+                <div>
+                    <span>От </span><input type="number" name="min-price" required><span> до </span><input type="number" name="max-price" required>
+                </div>
+            </div>
+            <div>
+                <h3>Оперативная память</h3>
+                <div>
+                    <span>От </span><input type="number" name="min-ram" required><span> до </span><input type="number" name="max-ram" required>
+                </div>
+            </div>
+            <div>
+                <h3>Встроенная память</h3>
+                <div>
+                    <span>От </span><input type="number" name="min-storage" required><span> до </span><input type="number" name="max-storage" required>
+                </div>
+            </div>
+            <div>
+                <h3>Производители</h3>
+                <ul id="manufacturers"></ul>
+            </div>
+            <div>
+                <h3>Только со скидками</h3>
+                <input type="checkbox" name="discounts">
+            </div>
+        </div>
+
+        <div>
+            <input type="submit" value="Применить">
+        </div>
+    </form>
     <ul id="products"></ul>
 </main>
 <script type="text/javascript" src="./static/script/app.js"></script>
