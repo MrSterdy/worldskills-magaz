@@ -21,3 +21,11 @@ body {
 .product[data-in-cart="false"] .add-product-counter {
     display: none;
 }
+
+#cart-wrapper > span:has(+ #products-wrapper > #cart-items[data-empty="false"]) {
+    display: none;
+}
+
+#products-wrapper:has(#cart-items[data-empty="true"]) {
+    display: none;
+}

@@ -11,9 +11,19 @@
 <body>
 <main>
     <form>
-        <input type="text" name="search">
-
         <div>
+            <input type="text" name="search">
+            <button type="button" id="cart">Корзина</button>
+            <dialog>
+                <button type="button" id="cart-close" autofocus>Закрыть</button>
+                <div id="cart-wrapper">
+                    <span>Корзина пустая</span>
+                    <div id="products-wrapper"></div>
+                </div>
+            </dialog>
+        </div>
+
+        <div id="filter-menu">
             <div>
                 <h3>Цена</h3>
                 <div>

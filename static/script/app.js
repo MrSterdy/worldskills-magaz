@@ -26,6 +26,14 @@ class ProductRepository {
         return JSON.parse(localStorage.getItem(ProductRepository.#KEY) ?? "[]");
     }
 
+    /**
+     * @param {string} id
+     * @returns {Product}|null}
+     */
+    getById(id) {
+        return this.getAll().find(p => p.id === id) ?? null;
+    }
+
     clear() {
         localStorage.removeItem(ProductRepository.#KEY);
     }
@@ -130,6 +138,13 @@ const manufacturerTemplate = `
     </li>
 `;
 
+const cartProductsTemplate = `
+    <ul id="cart-items" data-empty="{{EMPTY}}">
+        {{ITEMS}}
+    </ul>
+    <button type="button" id="buy-button">Купить за {{PRICE}} р.</button>
+`;
+
 function seed() {
     /** @type Product */
     const first = {
@@ -228,6 +243,13 @@ function beforeRender() {
         }
     }
 
+    document.getElementById("cart").addEventListener("click", function () {
+        this.nextElementSibling.showModal();
+    });
+    document.getElementById("cart-close").addEventListener("click", function () {
+        this.closest("dialog").close();
+    });
+
     document.querySelector(`input[name="search"]`).value = search;
     document.querySelector(`input[name="min-price"]`).value = minPrice;
     document.querySelector(`input[name="max-price"]`).value = maxPrice;
@@ -271,6 +293,36 @@ function render() {
 
         rawProducts.innerHTML += rawProduct;
     }
+
+    const rawCartProducts = document.getElementById("products-wrapper");
+
+    const cartProducts = cartRepository.getAll().map(e => [e, productRepository.getById(e.productId)]);
+
+    let items = "";
+    let totalPrice = 0;
+
+    for (const [cartEntry, product] of cartProducts) {
+        const price = product.discount
+            ? Math.round(product.price * (1 - product.discount / 100))
+            : product.price;
+
+        const rawProduct = productTemplate
+            .replace("{{ID}}", product.id)
+            .replace("{{IMG}}", product.thumbnailUrl)
+            .replace("{{TITLE}}", product.name)
+            .replace("{{PRICE}}", price)
+            .replace("{{OLD_PRICE}}", product.discount ? product.price : "")
+            .replace("{{COUNT}}", cartEntry.amount)
+            .replace("{{IN_CART}}", "true");
+
+        items += rawProduct;
+        totalPrice += price * cartEntry.amount;
+    }
+
+    rawCartProducts.innerHTML = cartProductsTemplate
+        .replace("{{EMPTY}}", items.length === 0)
+        .replace("{{ITEMS}}", items)
+        .replace("{{PRICE}}", totalPrice);
 
     Array.from(document.getElementsByClassName("add-product")).forEach(b =>
         b.addEventListener("click", () => {
