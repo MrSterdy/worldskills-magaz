@@ -10,6 +10,12 @@
  * @property {string} manufacturer
  */
 
+/**
+ * @typedef {Object} CartEntry
+ * @property {string} productId
+ * @property {number} amount
+ */
+
 class ProductRepository {
     static #KEY = "products";
 
@@ -40,10 +46,61 @@ class ProductRepository {
     }
 }
 
+class CartRepository {
+    static #KEY = "cart";
+
+    /**
+     * @returns {CartEntry[]}
+     */
+    getAll() {
+        return JSON.parse(localStorage.getItem(CartRepository.#KEY) ?? "[]");
+    }
+
+    /**
+     * @param {string} productId
+     * @returns {CartEntry|null}
+     */
+    getByProductId(productId) {
+        return this.getAll().find(p => p.productId === productId) ?? null;
+    }
+
+    /**
+     * @param {string} productId
+     */
+    add(productId) {
+        const entries = this.getAll();
+        const index = entries.findIndex(e => e.productId === productId);
+        if (index === -1) {
+            entries.push({ productId, amount: 1 });
+        } else {
+            entries[index].amount++;
+        }
+        localStorage.setItem(CartRepository.#KEY, JSON.stringify(entries));
+    }
+
+    /**
+     * @param {string} productId
+     */
+    remove(productId) {
+        const entries = this.getAll();
+        const index = entries.findIndex(e => e.productId === productId);
+        if (index !== -1) {
+            const entry = entries[index];
+            if (entry.amount <= 1) {
+                entries.splice(index, 1);
+            } else {
+                entry.amount--;
+            }
+            localStorage.setItem(CartRepository.#KEY, JSON.stringify(entries));
+        }
+    }
+}
+
 const productRepository = new ProductRepository();
+const cartRepository = new CartRepository();
 
 const productTemplate = `
-<li class="product" data-id="{{ID}}">
+<li class="product" data-id="{{ID}}" data-in-cart="{{IN_CART}}">
     <img src="{{IMG}}">
     <div>
         <h2 class="title">{{TITLE}}</h2>
@@ -52,9 +109,9 @@ const productTemplate = `
             <h4 class="old-price">{{OLD_PRICE}}</h4>
         </div>
         <div>
-            <button class="add-product">ДОБАВИТЬ В КОРЗИНИУ</button>
+            <button class="add-product add-product-main">ДОБАВИТЬ В КОРЗИНУ</button>
             
-            <div>
+            <div class="add-product-counter">
                 <button class="add-product">+</button>
                 <span class="counter">{{COUNT}}</span>
                 <button class="remove-product">-</button>
@@ -121,6 +178,7 @@ function seed() {
 
 function render() {
     const rawProducts = document.getElementById("products");
+    rawProducts.innerHTML = "";
 
     const allProducts = productRepository.getAll();
 
@@ -129,15 +187,35 @@ function render() {
             ? Math.round(product.price * (1 - product.discount / 100))
             : product.price;
 
+        const cartEntry = cartRepository.getByProductId(product.id);
+
         const rawProduct = productTemplate
             .replace("{{ID}}", product.id)
             .replace("{{IMG}}", product.thumbnailUrl)
             .replace("{{TITLE}}", product.name)
             .replace("{{PRICE}}", price)
-            .replace("{{OLD_PRICE}}", product.discount ? product.price : "");
+            .replace("{{OLD_PRICE}}", product.discount ? product.price : "")
+            .replace("{{COUNT}}", cartEntry?.amount ?? 0)
+            .replace("{{IN_CART}}", cartEntry ? "true" : "false");
 
         rawProducts.innerHTML += rawProduct;
     }
+
+    Array.from(document.getElementsByClassName("add-product")).forEach(b =>
+        b.addEventListener("click", () => {
+            const productId = b.closest(".product").getAttribute("data-id");
+            cartRepository.add(productId);
+            render();
+        })
+    );
+
+    Array.from(document.getElementsByClassName("remove-product")).forEach(b =>
+        b.addEventListener("click", () => {
+            const productId = b.closest(".product").getAttribute("data-id");
+            cartRepository.remove(productId);
+            render();
+        })
+    );
 }
 
 seed();

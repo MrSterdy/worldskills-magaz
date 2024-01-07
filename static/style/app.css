@@ -13,3 +13,11 @@
 body {
     font-family: Roboto, serif;
 }
+
+.product[data-in-cart="true"] .add-product-main {
+    display: none;
+}
+
+.product[data-in-cart="false"] .add-product-counter {
+    display: none;
+}
