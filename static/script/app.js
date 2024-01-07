@@ -249,6 +249,9 @@ function beforeRender() {
     document.getElementById("cart-close").addEventListener("click", function () {
         this.closest("dialog").close();
     });
+    document.getElementById("clear-filters").addEventListener("click", () =>
+       location.href = location.pathname
+    );
 
     document.querySelector(`input[name="search"]`).value = search;
     document.querySelector(`input[name="min-price"]`).value = minPrice;
