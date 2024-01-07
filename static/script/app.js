@@ -202,6 +202,7 @@ function seed() {
 
 const query = new URLSearchParams(location.search);
 const search = query.get("search") ?? "";
+const priceSort = query.get("price-sort") ?? "descending";
 const minPrice = isNaN(parseInt(query.get("min-price")))
     ? Math.min(...productRepository.getAll().map(p => p.price))
     : parseInt(query.get("min-price"));
@@ -253,6 +254,7 @@ function beforeRender() {
        location.href = location.pathname
     );
 
+    document.querySelector(`select[name="price-sort"] option[value="${priceSort}"]`).selected = true;
     document.querySelector(`input[name="search"]`).value = search;
     document.querySelector(`input[name="min-price"]`).value = minPrice;
     document.querySelector(`input[name="max-price"]`).value = maxPrice;
@@ -277,6 +279,9 @@ function render() {
     if (discounts) {
         allProducts = allProducts.filter(p => p.discount);
     }
+    allProducts = allProducts.sort((a, b) => priceSort === "ascending"
+        ? a.price - b.price
+        : b.price - a.price);
 
     for (const product of allProducts) {
         const price = product.discount
